@@ -25,7 +25,6 @@ export default function TicTacToePage() {
   const [isAiThinking, setIsAiThinking] = useState(false);
   const [lastMoveIndex, setLastMoveIndex] = useState<number | null>(null);
 
-  // Score state
   const [scores, setScores] = useState<ScoreState>({
     x: 0,
     o: 0,
@@ -34,7 +33,6 @@ export default function TicTacToePage() {
     streakCount: 0,
   });
 
-  // History state for time-travel
   const [history, setHistory] = useState<HistoryStep[]>([
     { board: Array(9).fill(null), lastMove: null, nextPlayer: 'X' },
   ]);
@@ -46,12 +44,10 @@ export default function TicTacToePage() {
   const isGameOver = winState.winner !== null;
   const isHumanTurn = gameMode === 'pvp' || currentTurn === humanPlayer;
 
-  // Initialize sounds mute state from storage
   useEffect(() => {
     setIsMuted(sounds.getMuted());
   }, []);
 
-  // Update scores when someone wins or draws
   const handleGameEnd = useCallback((winner: Player | 'draw') => {
     if (winner === 'draw') {
       sounds.playDraw();
@@ -77,7 +73,6 @@ export default function TicTacToePage() {
     }
   }, []);
 
-  // Apply a move
   const makeMove = useCallback(
     (index: number, player: Player) => {
       if (board[index] !== null || isGameOver) return;
@@ -91,7 +86,6 @@ export default function TicTacToePage() {
       const nextPlayer: Player = player === 'X' ? 'O' : 'X';
       setCurrentTurn(nextPlayer);
 
-      // Add to history
       const newHistory = history.slice(0, currentStep + 1);
       newHistory.push({
         board: newBoard,
@@ -101,7 +95,6 @@ export default function TicTacToePage() {
       setHistory(newHistory);
       setCurrentStep(newHistory.length - 1);
 
-      // Check win condition
       const result = checkWinState(newBoard);
       if (result.winner) {
         handleGameEnd(result.winner);
@@ -110,7 +103,6 @@ export default function TicTacToePage() {
     [board, isGameOver, history, currentStep, handleGameEnd]
   );
 
-  // Trigger AI move when it's AI's turn
   useEffect(() => {
     if (gameMode === 'pvp' || currentTurn !== aiPlayer || isGameOver) {
       return;
@@ -123,12 +115,11 @@ export default function TicTacToePage() {
         makeMove(aiMove, aiPlayer);
       }
       setIsAiThinking(false);
-    }, 400);
+    }, 350);
 
     return () => clearTimeout(timer);
   }, [currentTurn, gameMode, aiPlayer, isGameOver, board, makeMove]);
 
-  // Reset round
   const resetGame = useCallback((newSideChoice?: PlayerSideChoice) => {
     const choice = newSideChoice ?? sideChoice;
     const resolvedHuman: Player =
@@ -144,13 +135,11 @@ export default function TicTacToePage() {
     sounds.playClick();
   }, [sideChoice]);
 
-  // Handle side selection change
   const handleSelectSide = (choice: PlayerSideChoice) => {
     setSideChoice(choice);
     resetGame(choice);
   };
 
-  // Reset all scores
   const resetScores = () => {
     setScores({
       x: 0,
@@ -162,7 +151,6 @@ export default function TicTacToePage() {
     resetGame();
   };
 
-  // Jump to step (time-travel)
   const jumpToStep = (stepIndex: number) => {
     const target = history[stepIndex];
     setBoard(target.board);
@@ -172,7 +160,6 @@ export default function TicTacToePage() {
     sounds.playClick();
   };
 
-  // Keyboard shortcut listener
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) {
@@ -197,25 +184,18 @@ export default function TicTacToePage() {
 
   return (
     <main
-      className={`min-h-screen w-full flex flex-col items-center justify-between p-4 sm:p-8 bg-gradient-to-b ${theme.bgGradient} transition-colors duration-500`}
+      className={`min-h-screen w-full flex flex-col items-center justify-between p-4 sm:p-8 bg-gradient-to-b ${theme.bgGradient} transition-colors duration-300 font-sans`}
     >
-      {/* Top Header */}
-      <header className="w-full max-w-lg flex items-center justify-between py-3 mb-4 border-b border-slate-800/80">
-        <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-cyan-500 to-pink-500 flex items-center justify-center font-black text-slate-950 text-sm shadow-md">
-            XO
-          </div>
-          <div>
-            <h1 className="text-base sm:text-lg font-black tracking-tight text-slate-100 flex items-center gap-1.5">
-              <span>Tic-Tac-Toe Pro</span>
-              <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-cyan-500/10 text-cyan-400 border border-cyan-500/30">
-                v1.1
-              </span>
-            </h1>
-          </div>
+      <header className="w-full max-w-lg flex items-center justify-between py-3 mb-4 border-b border-zinc-800">
+        <div>
+          <h1 className="text-sm font-semibold tracking-tight text-zinc-100 flex items-center gap-2">
+            <span>Tic-Tac-Toe</span>
+            <span className="text-[10px] font-mono text-zinc-500 border border-zinc-800 px-1.5 py-0.5 rounded">
+              Next.js 15
+            </span>
+          </h1>
         </div>
 
-        {/* Action icons */}
         <div className="flex items-center gap-2">
           <button
             type="button"
@@ -224,28 +204,26 @@ export default function TicTacToePage() {
               setIsMuted(muted);
             }}
             title={isMuted ? 'Unmute Audio (M)' : 'Mute Audio (M)'}
-            aria-label={isMuted ? 'Unmute sound effects' : 'Mute sound effects'}
-            className="p-2 rounded-xl bg-slate-900/60 border border-slate-800 text-slate-300 hover:text-cyan-400 hover:bg-slate-800 transition-colors focus-visible:ring-2 focus-visible:ring-cyan-400 outline-none"
+            aria-label={isMuted ? 'Unmute audio' : 'Mute audio'}
+            className="p-1.5 rounded-lg border border-zinc-800 text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800 transition-colors focus-visible:ring-2 focus-visible:ring-zinc-400 outline-none"
           >
-            {isMuted ? <VolumeX className="w-4 h-4 text-slate-500" /> : <Volume2 className="w-4 h-4 text-cyan-400" />}
+            {isMuted ? <VolumeX className="w-4 h-4 text-zinc-600" /> : <Volume2 className="w-4 h-4 text-zinc-300" />}
           </button>
 
           <button
             type="button"
             onClick={() => resetGame()}
-            title="New Game (R)"
-            aria-label="Restart game round"
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-900/80 border border-slate-700/80 hover:border-cyan-400 text-xs font-semibold text-slate-200 transition-all shadow-sm focus-visible:ring-2 focus-visible:ring-cyan-400 outline-none"
+            title="Reset Game (R)"
+            aria-label="Restart round"
+            className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border border-zinc-800 hover:border-zinc-700 bg-zinc-900/60 text-xs font-medium text-zinc-300 transition-colors focus-visible:ring-2 focus-visible:ring-zinc-400 outline-none"
           >
-            <RotateCcw className="w-3.5 h-3.5 text-cyan-400" />
-            <span>New Game</span>
+            <RotateCcw className="w-3.5 h-3.5" />
+            <span>Restart</span>
           </button>
         </div>
       </header>
 
-      {/* Main Game Arena */}
       <div className="w-full max-w-lg flex flex-col items-center">
-        {/* Scoreboard */}
         <ScoreBoard
           scores={scores}
           currentTurn={currentTurn}
@@ -256,12 +234,11 @@ export default function TicTacToePage() {
           isAiThinking={isAiThinking}
         />
 
-        {/* 3x3 Board Grid */}
         <section
-          aria-label="Tic-Tac-Toe Game Board"
-          className={`relative w-full aspect-square max-w-[360px] sm:max-w-[400px] p-4 rounded-3xl border backdrop-blur-xl transition-all duration-300 ${theme.boardBg} mb-6`}
+          aria-label="Game board"
+          className={`relative w-full aspect-square max-w-[340px] sm:max-w-[380px] p-3 rounded-2xl border transition-colors ${theme.boardBg} mb-5`}
         >
-          <div className="grid grid-cols-3 gap-3 w-full h-full">
+          <div className="grid grid-cols-3 gap-2.5 w-full h-full">
             {board.map((value, idx) => {
               const isWinningSquare = winState.line ? winState.line.includes(idx) : false;
               const isLastMove = lastMoveIndex === idx;
@@ -283,7 +260,6 @@ export default function TicTacToePage() {
           </div>
         </section>
 
-        {/* Side Selector (Choose Side / Who Goes First) */}
         <SideSelector
           sideChoice={sideChoice}
           humanPlayer={humanPlayer}
@@ -292,7 +268,6 @@ export default function TicTacToePage() {
           onSelectSide={handleSelectSide}
         />
 
-        {/* Game Mode Selector */}
         <ModeSelector
           currentMode={gameMode}
           onSelectMode={(mode) => {
@@ -301,13 +276,11 @@ export default function TicTacToePage() {
           }}
         />
 
-        {/* Theme Selector */}
         <ThemeSelector
           currentTheme={currentTheme}
           onSelectTheme={(themeId) => setCurrentTheme(themeId)}
         />
 
-        {/* Move History / Time Travel */}
         <MoveHistory
           history={history}
           currentStep={currentStep}
@@ -315,20 +288,18 @@ export default function TicTacToePage() {
           onJumpToStep={jumpToStep}
         />
 
-        {/* Reset Scores Option */}
-        <div className="flex items-center justify-between w-full max-w-lg px-2 text-xs text-slate-500 mb-8">
-          <span>Shortcuts: [1-9] Place mark • [R] Restart • [M] Mute</span>
+        <div className="flex items-center justify-between w-full max-w-lg px-1 text-[11px] text-zinc-500 mb-6">
+          <span>Shortcuts: 1-9 to place • R to restart • M to mute</span>
           <button
             type="button"
             onClick={resetScores}
-            className="hover:text-rose-400 underline underline-offset-2 transition-colors focus-visible:ring-2 focus-visible:ring-cyan-400 outline-none rounded"
+            className="hover:text-zinc-300 underline underline-offset-2 transition-colors focus-visible:ring-1 focus-visible:ring-zinc-400 outline-none"
           >
-            Reset All Stats
+            Reset score history
           </button>
         </div>
       </div>
 
-      {/* Victory / Draw Modal */}
       {winState.winner && (
         <WinModal
           winner={winState.winner}
@@ -341,14 +312,9 @@ export default function TicTacToePage() {
         />
       )}
 
-      {/* Footer */}
-      <footer className="w-full max-w-lg pt-4 border-t border-slate-900 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-slate-500">
-        <div className="flex items-center gap-1.5">
-          <span>Built with Next.js 15, React 19 & Tailwind CSS</span>
-        </div>
-        <div className="flex items-center gap-3">
-          <span className="text-cyan-400 font-medium">Ready for Vercel Deployment</span>
-        </div>
+      <footer className="w-full max-w-lg pt-3 border-t border-zinc-900 flex items-center justify-between text-xs text-zinc-600">
+        <span>React 19, Next.js 15, TypeScript</span>
+        <span>Keyboard accessible</span>
       </footer>
     </main>
   );

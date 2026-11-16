@@ -1,86 +1,60 @@
-# 🎮 Tic-Tac-Toe Pro | React & Next.js Showcase
+# Tic-Tac-Toe (Next.js & React 19)
 
-An ultra-polished, feature-complete Tic-Tac-Toe web application built with **React 19**, **Next.js 15 (App Router)**, **TypeScript**, and **Tailwind CSS**. Designed with modern cyber-glass aesthetics, zero external audio asset dependencies, and an unbeatable Minimax AI.
+A responsive Tic-Tac-Toe web application built with Next.js 15 (App Router), React 19, TypeScript, and Tailwind CSS. Features an unbeatable Minimax algorithm, customizable themes, Web Audio API sound effects, and full keyboard navigation.
 
----
+## Features
 
-## ✨ Features that Stand Out
+- **Opponent Modes**: Play locally with pass-and-play, or challenge an AI across three difficulty levels:
+  - Easy: Random move selection.
+  - Medium: Heuristic blocking and basic opportunistic wins.
+  - Master: Recursive Minimax with depth penalty scoring (unbeatable).
+- **Side Selection**: Play as X (moves first), play as O (computer makes the opening move), or randomize who starts.
+- **Synthesized Audio**: Sound effects generated entirely at runtime with the browser's Web Audio API (`AudioContext`). Zero external audio asset dependencies or network requests.
+- **Move History & Replay**: Inspect turn coordinates step-by-step and rewind to any previous board state.
+- **Accessibility & Keyboard Navigation**: Full WCAG compliance using native buttons with proper ARIA attributes, live regions (`aria-live="polite"`), and direct numeric key placement (`1`-`9`), restart (`R`), and mute (`M`).
+- **Visual Styles**: Switch between Minimal Dark, Terminal, Nordic Frost, and Geometric themes.
 
-### 1. 🤖 Unbeatable Minimax AI Engine
-- **Easy Mode**: Casual, relaxed play with randomized moves.
-- **Medium Mode**: Strategic blocking & counter-attacks.
-- **Master Mode (Unbeatable)**: Full recursive **Minimax algorithm with depth penalty scoring**. Mathematically guarantees the AI cannot be defeated.
+## Getting Started
 
-### 2. 🎨 4 Dynamic Custom Themes & Character Packs
-Switch themes on the fly with custom symbols, glowing neon effects, and animations:
-- ⚡ **Cyberpunk Neon**: Electric Cyan Blade (`⚡`) vs Magenta Pulse (`🔥`)
-- 🐾 **Pixel Pets**: Mischief Kitty (`🐱`) vs Good Doggo (`🐶`)
-- 👾 **Arcade 1984**: Shadow Ghost (`👻`) vs Golden Star (`⭐`)
-- 🚀 **Cosmic Duel**: Cosmo Rocket (`🚀`) vs UFO Invader (`🛸`)
+### Prerequisites
 
-### 3. 🔊 Zero-Asset Synthesized Web Audio
-- High-performance, self-contained sound effects generated directly via the browser's **Web Audio API (`AudioContext`)**.
-- No external `.mp3`/`.wav` files to load or fail.
-- Distinct tones for Player 1 blips, Player 2 resonance, victory fanfare arpeggios, and draw sounds.
-- Persistent mute toggle with keyboard shortcut (`M`).
+- Node.js 18+ (tested on Node 20 and 22+)
+- npm or pnpm
 
-### 4. ⏳ Interactive Move History & Time Travel
-- Turn-by-turn history log tracking every coordinate.
-- Allows players to "time travel" back to any previous move and inspect or replay from that state.
+### Local Development
 
-### 5. 📊 Live Competitive Scoreboard
-- Real-time score tracker for Player 1, Player 2 / AI, and Ties.
-- Dynamic **Win Streak Counter** (`🔥 3 Streak!`).
-- Active turn indicator with pulsing animations.
+1. Install dependencies:
+   ```bash
+   npm install
+   ```
 
-### 6. ⌨️ Keyboard & Accessibility Controls
-- **1 – 9**: Place mark directly on grid positions.
-- **R**: Instant restart / new game.
-- **M**: Mute / unmute audio.
-- Fully accessible with ARIA attributes and focus rings.
+2. Start the development server:
+   ```bash
+   npm run dev
+   ```
 
----
+3. Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-## 🚀 Quick Start (Local Development)
+### Production Build
 
 ```bash
-# Clone the repository
-git clone <your-repo-url>
-cd tic-tac-toe-pro
-
-# Install dependencies
-npm install
-
-# Start local dev server
-npm run dev
+npm run build
+npm run start
 ```
 
-Open [http://localhost:3000](http://localhost:3000) in your browser.
+## Vercel Deployment
 
----
+This project uses standard Next.js conventions and requires no special environment variables.
 
-## 🚢 Deploy to Vercel in 1 Minute
+1. Push this repository to GitHub.
+2. In the Vercel dashboard, click **Add New Project** and import the repository.
+3. Keep the default Next.js build settings and click **Deploy**.
 
-1. Push this project to your GitHub account:
-   ```bash
-   git init
-   git add .
-   git commit -m "feat: complete tic-tac-toe pro application"
-   git branch -M main
-   git remote add origin https://github.com/<your-username>/<your-repo-name>.git
-   git push -u origin main
-   ```
-2. Go to [vercel.com](https://vercel.com) and click **"Add New" > "Project"**.
-3. Import your GitHub repository.
-4. Click **Deploy**. Vercel will automatically detect Next.js and build it flawlessly.
+## Tech Stack
 
----
-
-## 🛠 Tech Stack
-
-- **Framework**: [Next.js 15](https://nextjs.org/) (App Router)
-- **Library**: [React 19](https://react.dev/)
-- **Language**: [TypeScript](https://www.typescriptlang.org/)
-- **Styling**: [Tailwind CSS](https://tailwindcss.com/)
-- **Icons**: [Lucide React](https://lucide.dev/)
-- **Effects**: [Canvas Confetti](https://github.com/catdad/canvas-confetti) & Web Audio API
+- **Framework**: Next.js 15
+- **Library**: React 19
+- **Language**: TypeScript
+- **Styling**: Tailwind CSS
+- **Icons**: Lucide React
+- **Celebrations**: canvas-confetti
