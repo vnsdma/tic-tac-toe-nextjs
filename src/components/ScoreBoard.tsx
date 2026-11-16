@@ -9,7 +9,9 @@ interface ScoreBoardProps {
   currentTurn: Player;
   theme: ThemeConfig;
   gameMode: GameMode;
-  isAiTurn: boolean;
+  humanPlayer: Player;
+  aiPlayer: Player;
+  isAiThinking: boolean;
 }
 
 export const ScoreBoard: React.FC<ScoreBoardProps> = ({
@@ -17,15 +19,38 @@ export const ScoreBoard: React.FC<ScoreBoardProps> = ({
   currentTurn,
   theme,
   gameMode,
-  isAiTurn,
+  humanPlayer,
+  aiPlayer,
+  isAiThinking,
 }) => {
   const isPvp = gameMode === 'pvp';
   const isXTurn = currentTurn === 'X';
   const isOTurn = currentTurn === 'O';
 
+  const isXAi = !isPvp && aiPlayer === 'X';
+  const isOAi = !isPvp && aiPlayer === 'O';
+
+  const p1Label = isPvp
+    ? theme.p1.name
+    : isXAi
+    ? 'AI Bot'
+    : 'You (P1)';
+
+  const p2Label = isPvp
+    ? theme.p2.name
+    : isOAi
+    ? 'AI Bot'
+    : 'You (P2)';
+
   return (
-    <div className="w-full max-w-lg mb-6">
-      {/* Cards container */}
+    <section aria-label="Scoreboard" className="w-full max-w-lg mb-6">
+      {/* Live Region for Screen Readers */}
+      <div className="sr-only" aria-live="polite" aria-atomic="true">
+        {isAiThinking
+          ? `AI is calculating next move as ${currentTurn === 'X' ? theme.p1.symbol : theme.p2.symbol}`
+          : `Current turn: ${currentTurn === 'X' ? p1Label : p2Label}`}
+      </div>
+
       <div className="grid grid-cols-3 gap-2.5 sm:gap-3.5 items-center">
         {/* Player X */}
         <div
@@ -37,12 +62,18 @@ export const ScoreBoard: React.FC<ScoreBoardProps> = ({
         >
           {isXTurn && (
             <span className="absolute -top-2.5 px-2 py-0.5 text-[10px] uppercase font-bold tracking-wider bg-cyan-500 text-slate-950 rounded-full shadow-sm animate-pulse">
-              Active Turn
+              {isXAi && isAiThinking ? 'AI Thinking...' : 'Active Turn'}
             </span>
           )}
           <div className="flex items-center gap-1.5 text-xs text-slate-400 font-medium mb-1">
-            <User className="w-3.5 h-3.5 text-cyan-400" />
-            <span className="truncate max-w-[80px]">{theme.p1.name}</span>
+            {isXAi ? (
+              <Bot className="w-3.5 h-3.5 text-cyan-400" />
+            ) : isPvp ? (
+              <Users className="w-3.5 h-3.5 text-cyan-400" />
+            ) : (
+              <User className="w-3.5 h-3.5 text-cyan-400" />
+            )}
+            <span className="truncate max-w-[85px]">{p1Label}</span>
           </div>
           <div className="text-2xl sm:text-3xl mb-1">{theme.p1.symbol}</div>
           <div className="text-xl sm:text-2xl font-black text-slate-100 font-mono">
@@ -78,18 +109,18 @@ export const ScoreBoard: React.FC<ScoreBoardProps> = ({
         >
           {isOTurn && (
             <span className="absolute -top-2.5 px-2 py-0.5 text-[10px] uppercase font-bold tracking-wider bg-pink-500 text-slate-950 rounded-full shadow-sm animate-pulse">
-              {isAiTurn ? 'AI Thinking...' : 'Active Turn'}
+              {isOAi && isAiThinking ? 'AI Thinking...' : 'Active Turn'}
             </span>
           )}
           <div className="flex items-center gap-1.5 text-xs text-slate-400 font-medium mb-1">
-            {isPvp ? (
+            {isOAi ? (
+              <Bot className="w-3.5 h-3.5 text-pink-400" />
+            ) : isPvp ? (
               <Users className="w-3.5 h-3.5 text-pink-400" />
             ) : (
-              <Bot className="w-3.5 h-3.5 text-pink-400" />
+              <User className="w-3.5 h-3.5 text-pink-400" />
             )}
-            <span className="truncate max-w-[80px]">
-              {isPvp ? theme.p2.name : 'AI Bot'}
-            </span>
+            <span className="truncate max-w-[85px]">{p2Label}</span>
           </div>
           <div className="text-2xl sm:text-3xl mb-1">{theme.p2.symbol}</div>
           <div className="text-xl sm:text-2xl font-black text-slate-100 font-mono">
@@ -97,6 +128,6 @@ export const ScoreBoard: React.FC<ScoreBoardProps> = ({
           </div>
         </div>
       </div>
-    </div>
+    </section>
   );
 };

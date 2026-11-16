@@ -3,6 +3,8 @@ export type SquareValue = Player | null;
 
 export type GameMode = 'pvp' | 'ai-easy' | 'ai-medium' | 'ai-unbeatable';
 
+export type PlayerSideChoice = 'X' | 'O' | 'random';
+
 export type ThemeId = 'cyber' | 'retro' | 'pets' | 'space';
 
 export interface ThemeConfig {
